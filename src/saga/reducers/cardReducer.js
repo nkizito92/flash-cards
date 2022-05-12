@@ -22,4 +22,4 @@ export const cardReducer = createSlice({
 
 export const { getCardsFetch, getCardsSuccess, getCardsFailure} = cardReducer.actions;
 
-export default cardReducer;
+export default cardReducer.reducer;
