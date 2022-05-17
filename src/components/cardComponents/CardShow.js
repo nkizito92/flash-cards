@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useParams, Link } from "react-router-dom"
+import { useParams, Link} from "react-router-dom"
 const CardShow = ({ cards }) => {
     const params = useParams()
     const card = cards.find(card => card.id === Number(params.id))
@@ -33,8 +33,9 @@ const CardShow = ({ cards }) => {
             setCardDef("That is not correct")
         }
     }
-    return (
-        <div>
+    if(card){
+        return (
+            <div>
             <h2> This is CardShow</h2>
             <h3>{card.full_name}</h3>
             {answer && <div>{cardDef}</div>}
@@ -45,6 +46,7 @@ const CardShow = ({ cards }) => {
             {cardDef && <div><Link onClick={()=>setCardDef("")} to={`/cards/${Math.floor(Math.random()*41)+1}`}> Next</Link></div>}
         </div>
     )
+}
 }
 
 export default CardShow
