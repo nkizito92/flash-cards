@@ -23,7 +23,7 @@ export const cardReducer = createSlice({
             const newState = [...state.cards]
             newState.splice(idx, 1, action.payload)
             return {
-                ...state, cards: [...newState]
+                ...state, cards: [...newState],
             }
         },
         deleteCardSuccess: (state, action) => {
