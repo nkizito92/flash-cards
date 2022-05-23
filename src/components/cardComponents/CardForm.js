@@ -1,4 +1,4 @@
-import {useState} from "react"
+import React, {useState} from "react"
 import { useDispatch, connect } from "react-redux"
 import { newCardPost } from "../../saga/reducers/cardReducer"
 const CardForm = () => {
