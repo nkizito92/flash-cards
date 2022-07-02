@@ -3,27 +3,32 @@ import { getCardsSuccess } from '../reducers/cardReducer'
 import axios from 'axios';
 
 function* workGetCardsFetch() {
-    const cards = yield call(() => fetch('http://localhost:3001/clients'))
+    const cards = yield call(() => fetch('http://127.0.0.1:8000/'))
     const formattedCards = yield cards.json();
     yield put(getCardsSuccess(formattedCards))
 }
 
 function* workCreateCard(action) {
     try {
-
-        const client = action.payload
-        yield call(() => axios.post('http://localhost:3001/clients', { client }))
+        const word = action.payload
+        const options = {
+            headers: { "content-type": "application/json" }
+        }
+        yield call(() => axios.post('http://127.0.0.1:8000/words/new/', { word }, options))
     } catch (error) {
         console.log(error.message)
     }
 }
 
 function* updateCard(action) {
-    const client = action.payload
+    const word = action.payload
+    const options = {
+        headers: { "content-type": "application/json" }
+    }
     try {
-        yield call(() => axios.patch(`http://localhost:3001/clients/${client.id}`, { client }))
-        const clients = yield select(state => state.show.cards)
-        const testingGetCards = getCardsSuccess(clients)
+        yield call(() => axios.patch(`http://127.0.0.1:8000/words/${word.id}/edit/`, { word }, options))
+        const words = yield select(state => state.show.cards)
+        const testingGetCards = getCardsSuccess(words)
         yield put(testingGetCards)
     } catch (error) {
         console.log(error.message)
@@ -31,9 +36,12 @@ function* updateCard(action) {
 }
 
 function* deleteCard(action) {
-    const client = action.payload
+    const word = action.payload
+    const options = {
+        headers: { "content-type": "application/json" }
+    }
     try {
-        yield call(() => axios.delete(`http://localhost:3001/clients/${client.id}`, { client }))
+        yield call(() => axios.delete(`http://127.0.0.1:8000/words/${word.id}/delete/`, { word }, options))
     } catch (error) {
         console.log(error.message)
     }
