@@ -1,42 +1,36 @@
-import React, {useState} from "react"
+import React, { useState} from "react"
 import { useDispatch, connect } from "react-redux"
+import { useNavigate } from "react-router-dom"
 import { newCardPost } from "../../saga/reducers/cardReducer"
 const CardForm = () => {
     const dispatch = useDispatch()
     const [name, setName] = useState("")
-    const [price, setPrice] = useState("")
-    const [id, setId] = useState("")
+    const [definition, setDefinition] = useState("")
+    const navigation = useNavigate()
     function handleSubmit(e) {
         e.preventDefault()
         const newClient = {
-            full_name : name,
-            pay_rate: price,
-            driver_id: id
+            name: name,
+            definition: definition,
         }
         dispatch(newCardPost(newClient))
+        navigation("/")
     }
     return (
         <div>
-            This is CardsForm 
+            This is CardsForm
             <form >
                 <div>
-                <input type="text" name="driver_id"
-                    onChange= {e=> setId(e.target.value)} value={id} placeholder="id"/>
-
+                    <input type="text" name="name"
+                        onChange={(e) => setName(e.target.value)} value={name} placeholder="name" />
                 </div>
                 <div>
-                <input type="text" name="full_name"
-                     onChange={(e)=>setName(e.target.value)} value={name}   placeholder="full_name"/>
-
+                    <textarea type="textArea" name="definition" cols={50} rows={10}
+                        onChange={e => setDefinition(e.target.value)} value={definition} placeholder="definition"></textarea>
                 </div>
-                <div>
-                <input type="text" name="pay_rate"
-                     onChange={e =>setPrice(e.target.value)} value={price}  placeholder="pay_rate" />
-
-                </div>
-                <button onClick={e=>handleSubmit(e)}>Create Card</button>
+                <button onClick={e => handleSubmit(e)}>Create Card</button>
             </form>
         </div>
     )
 }
-export default connect(null,{newCardPost})(CardForm)
+export default connect(null, { newCardPost })(CardForm)
