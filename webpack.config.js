@@ -1,25 +1,26 @@
 const path = require('path')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const CopyWebPackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const InterpolateHtmlPlugin = require('interpolate-html-plugin')
 const CONFIG = {
     public: "./public/index.html",
     cssEntry: './src/App.css',
-    favicon: './public/favicon.ico'
+    favicon: './public/favicon.ico',
+    bundle: 'index.bundle.js'
 }
 module.exports = {
     entry: path.join(__dirname, "src", "index.js"),
     output: {
         path: path.resolve(__dirname, '/dist'),
-        filename: 'index.bundle.js'
+        filename: CONFIG.bundle,
+        publicPath: '/'
     },
+    mode: 'development',
     devServer: {
         port: 3010,
+        historyApiFallback: true,
         hot: true,
-        open: true
+        open: true,
     },
-
     module: {
         rules: [
             {
@@ -48,12 +49,11 @@ module.exports = {
     },
     plugins: [
 
-        new CopyWebPackPlugin({
-            patterns: [
-                { from: path.resolve(CONFIG.public) },
-
-            ]
-        }),
+        // new CopyWebPackPlugin({
+        //     patterns: [
+        //         { from: path.resolve(CONFIG.public) },
+        //     ]
+        // }),
         new MiniCssExtractPlugin(),
         new InterpolateHtmlPlugin({
             PUBLIC_URL: 'static' // can modify `static` to another name or get it from `process`
