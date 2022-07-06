@@ -3,16 +3,19 @@ import { useParams, Link } from "react-router-dom"
 const CardShow = ({ cards }) => {
     const params = useParams()
     const card = cards.find(card => card.id === Number(params.id))
+    const nextCardId = cards.map(ca => ca.id)
     const [cardDef, setCardDef] = useState("")
-    const [simAns, setSimAns] = useState("")
-    const [answer, setAnswer] = useState("")
+    const [yourAnswer, setYourAnswer] = useState("")
     const [isPass, setIsPass] = useState("")
-    const cardDefinition = (definition = "You are displaying the definition") => {
-        // take definition from card and compare it to user own defintion
+    const [isFail, setIsFail] = useState("")
+
+    const cardDefinition = (definition = card.definition) => {
+        // take definition from card and compare it to users own definition
         // click to go to next and back as well
-        const theAnswer = definition.toLowerCase().split(" ")
-        const isAnswer = () => {
-            const results = theAnswer.map(word => answer.toLowerCase().split(" ").includes(word))
+        const theAnswer = definition.toLowerCase().replace(/[^\w\s]/g, "").split(" ")
+        
+            const results = theAnswer.map(word => yourAnswer.toLowerCase().replace(/[^\w\s]/g, "").split(" ").includes(word))
+            console.log(theAnswer)
             const common = {
                 true: 0,
                 false: 0
@@ -24,28 +27,31 @@ const CardShow = ({ cards }) => {
                     common[i] = 1
                 }
             }
-            console.log(common)
-            setIsPass(common.true > common.false)
-            return common.true > common.false
-        }
-        if (!!isAnswer()) {
-            setCardDef("You are displaying the definition")
-            setSimAns(answer)
+        // This will display the full definition if user is close or right
+        if (common.true > common.false || common.true > 15)  {
+            setCardDef(card.definition)
+            setIsFail("")
+            setIsPass(true)
         } else {
-            setCardDef("That is not correct")
+            setIsPass(false)
+            setIsFail("That is not correct try again")
         }
     }
     if (card) {
         return (
             <div>
-                <h2> This is CardShow</h2>
-                <h3>{card.full_name}</h3>
-                {answer && <div>{cardDef}</div>}
-                {isPass && <div>Your answer: {answer} ✅</div>}
-                <input type="text" onChange={e => setAnswer(e.target.value)} value={answer} />
-                <button onClick={() => cardDefinition()}>View Definition</button>
-                <Link to={`/cards/${params.id}/edit`} >Edit Card</Link>
-                {isPass && <div><Link onClick={() => setCardDef("")} to={`/cards/${Math.floor(Math.random() * 41) + 1}`}> Next</Link></div>}
+                <h2>{card.name}</h2>
+                <div className="definition">
+                    {isPass && <h3>{cardDef}</h3>}
+                    {isFail && <h3 className="wrong">{isFail}</h3>}
+                    {isPass && <div className="correct">Your answer: {yourAnswer} ✅</div>}
+                </div>
+                <textarea cols={50} rows={10} type="text" onChange={e => setYourAnswer(e.target.value)} value={yourAnswer}> </textarea>
+                <br></br><button onClick={() => cardDefinition()}>Check Your Answer</button>
+                <br></br><Link to={`/cards/${params.id}/edit`} >Edit Card</Link>
+                {isPass && <div><Link onClick={() =>{
+                    setYourAnswer("")
+                    setIsPass(false)}} to={`/cards/${nextCardId[Math.floor(Math.random() * cards.length)]}`}> Next</Link></div>}
             </div>
         )
     }
