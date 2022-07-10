@@ -1,19 +1,24 @@
-import React, { useState } from "react"
+import React, { useState, useContext } from "react"
 import { useParams, Link } from "react-router-dom"
-const CardShow = ({ cards }) => {
+import AuthContext from "../adminComponents/AuthContext"
+const CardShow = () => {
     const params = useParams()
+    const {cards} = useContext(AuthContext)
     const card = cards.find(card => card.id === Number(params.id))
-    const nextCardId = cards.map(ca => ca.id)
+    const nextCardIds = cards.map(ca => ca.id)
     const [cardDef, setCardDef] = useState("")
     const [yourAnswer, setYourAnswer] = useState("")
     const [isPass, setIsPass] = useState("")
     const [isFail, setIsFail] = useState("")
-
+    let getTime = () =>{       
+        return new Date(card.updated).toLocaleDateString('en-US', 
+        {month: "long", day: "numeric", year: "numeric"})
+    }
     const cardDefinition = (definition = card.definition) => {
         // take definition from card and compare it to users own definition
         // click to go to next and back as well
         const theAnswer = definition.toLowerCase().replace(/[^\w\s]/g, "").split(" ")
-        
+       
             const results = theAnswer.map(word => yourAnswer.toLowerCase().replace(/[^\w\s]/g, "").split(" ").includes(word))
             console.log(theAnswer)
             const common = {
@@ -41,6 +46,7 @@ const CardShow = ({ cards }) => {
         return (
             <div>
                 <h2>{card.name}</h2>
+                <div>{getTime()}</div>
                 <div className="definition">
                     {isPass && <h3>{cardDef}</h3>}
                     {isFail && <h3 className="wrong">{isFail}</h3>}
@@ -51,7 +57,7 @@ const CardShow = ({ cards }) => {
                 <br></br><Link to={`/cards/${params.id}/edit`} >Edit Card</Link>
                 {isPass && <div><Link onClick={() =>{
                     setYourAnswer("")
-                    setIsPass(false)}} to={`/cards/${nextCardId[Math.floor(Math.random() * cards.length)]}`}> Next</Link></div>}
+                    setIsPass(false)}} to={`/cards/${nextCardIds[Math.floor(Math.random() * cards.length)]}`}> Next</Link></div>}
             </div>
         )
     }
