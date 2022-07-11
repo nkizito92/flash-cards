@@ -12,7 +12,7 @@ const CardForm = () => {
         const newClient = {
             name: name,
             definition: definition,
-        }
+        }  
         dispatch(newCardPost(newClient))
         navigation("/")
     }
