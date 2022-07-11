@@ -2,21 +2,19 @@ import React, { useState } from "react"
 import { useDispatch } from "react-redux"
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { deleteCardSuccess, updateCardSuccess } from "../../saga/reducers/cardReducer"
-const CardEdit = ({ cards }) => {
+const CardEdit = ({cards}) => {
     const navigation = useNavigate()
     const params = useParams()
     const card = cards.find(card => card.id === Number(params.id))
     const dispatch = useDispatch()
     const [name, setName] = useState("")
-    const [price, setPrice] = useState("")
-    const [id, setId] = useState("")
+    const [definition, setDefinition] = useState("")
     function handleSubmit(e) {
         e.preventDefault()
         const clientToUpdate = {
             id: Number(params.id),
-            full_name: name,
-            pay_rate: price,
-            driver_id: id
+            name: name,
+            definition: definition,
         }
         dispatch(updateCardSuccess(clientToUpdate))
         navigation(`/cards/${params.id}`)
@@ -25,46 +23,38 @@ const CardEdit = ({ cards }) => {
         e.preventDefault()
         const clientToDelete = {
             id: Number(params.id),
-            full_name: name,
-            pay_rate: price,
-            driver_id: id
+            name: name,
+            definition: definition,
         }
         dispatch(deleteCardSuccess(clientToDelete))
-        navigation("/")
+        navigation("/cards")
     }
-if(card){
-    return (
-        <div>
-            This is Card Edit
-            <form >
-                <div>
-                   <div>ID</div> 
-                   <input type="text" name="driver_id"
-                        onChange={e => setId(e.target.value)} value={id} placeholder={params.id} />
+    if (card) {
+        return (
+            <div>
+                This is Card Edit
+                <form >
+                    <div>
+                        <div>Name</div>
+                        <input type="text" name="name"
+                            onChange={(e) => setName(e.target.value)} value={name} placeholder={card.name} />
+                    </div>
+                    <div>
+                        <div>Definition</div>
+                        <textarea type="text" name="definition" rows={10} cols={50}
+                            onChange={e => setDefinition(e.target.value)} value={definition} placeholder={card.definition} ></textarea>
 
-                </div>
-                <div>
-                    <div>Full Name</div> 
-                    <input type="text" name="full_name"
-                        onChange={(e) => setName(e.target.value)} value={name} placeholder={card.full_name} />
+                    </div>
+                    <button onClick={e => handleSubmit(e)}>Update Card</button>
+                </form>
+                <form>
 
-                </div>
-                <div>
-                   <div>Pay Rate</div>
-                    <input type="text" name="pay_rate"
-                        onChange={e => setPrice(e.target.value)} value={price} placeholder={card.pay_rate} />
-
-                </div>
-                <button onClick={e => handleSubmit(e)}>Update Card</button>
-            </form>
-            <form>
-
-                <button onClick={(e) => handleDelete(e)}>Delete Client</button>
-            </form>
-            <Link to={`/cards/${params.id}`}>Back</Link>
-        </div>
-    )
-}
+                    <button onClick={(e) => handleDelete(e)}>Delete Client</button>
+                </form>
+                <Link to={`/cards/${params.id}`}>Back</Link>
+            </div>
+        )
+    }
 }
 
 export default CardEdit
