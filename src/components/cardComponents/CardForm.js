@@ -1,20 +1,23 @@
-import React, { useState} from "react"
+import React, { useState, useContext} from "react"
 import { useDispatch, connect } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { newCardPost } from "../../saga/reducers/cardReducer"
+import AuthContext from "../adminComponents/AuthContext"
 const CardForm = () => {
     const dispatch = useDispatch()
     const [name, setName] = useState("")
     const [definition, setDefinition] = useState("")
     const navigation = useNavigate()
+    const {contextData} = useContext(AuthContext)
     function handleSubmit(e) {
         e.preventDefault()
         const newClient = {
+            user: contextData.user.username,
             name: name,
             definition: definition,
         }  
         dispatch(newCardPost(newClient))
-        navigation("/")
+        navigation("/cards")
     }
     return (
         <div>
