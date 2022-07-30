@@ -18,7 +18,6 @@ export const AuthProvider = () => {
     const [loading, setLoading] = useState(true)
     const jumpTo = useNavigate()
     const loginUser = async (e) => {
-        
         e.preventDefault()
         let response = await fetch("http://127.0.0.1:8000/token/", {
             method: "POST",
@@ -35,7 +34,7 @@ export const AuthProvider = () => {
             jumpTo('/cards/')
         } else {
             alert('Something went Wrong!')
-        }
+        }      
     }
     const logout = () => {
         setAuthTokens(null)
@@ -66,8 +65,11 @@ export const AuthProvider = () => {
 
     let contextData = {
         user:user,
+        authTokens: authTokens,
+        setUser: setUser,
+        setAuthTokens: setAuthTokens,
         logout:logout,
-        loginUser: loginUser
+        loginUser: loginUser,
     }
     // refreshing the authToken every 4 minutes
     useEffect(() => {
