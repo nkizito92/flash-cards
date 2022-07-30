@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-const Cards = ({cards}) => {
+const CardList = ({cards}) => {
     return (
         <div>
            <h1>Select a Card</h1> 
@@ -12,4 +12,4 @@ const Cards = ({cards}) => {
     )
 }
 
-export default Cards
+export default CardList
