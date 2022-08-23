@@ -1,6 +1,5 @@
 import React, { useState } from "react"
 import { useParams, Link, useNavigate } from "react-router-dom"
-
 const CardShow = ({cards}) => {
     const nav = useNavigate()
     const params = useParams()
@@ -57,17 +56,21 @@ const CardShow = ({cards}) => {
     }
     if (card) {
         return (
-            <div>
-                <h2>{card.name}</h2>
+            <div className="container is-max-desktop">
+                <h1 className="title">{card.name}</h1>
                 <div>{getTime()}</div>
                 <h3>{lives} Attempts </h3>
                 <div className="definition">
-                    {isPass && <h3>{cardDef}</h3>}
                     {isFail && <h3 className="wrong">{isFail}</h3>}
                     {isPass && <div className="correct">Your answer: {yourAnswer} ✅</div>}
                 </div>
-                <textarea cols={50} rows={10} type="text" onChange={e => setYourAnswer(e.target.value)} value={yourAnswer}> </textarea>
-                <br></br><button id="checkingAnswer" onClick={() => cardDefinition()}>Check Your Answer</button>
+              {isPass && <div className="card">
+                    <div className="card-content">
+                        <div className="content"> {cardDef}</div>
+                    </div>
+                </div> }
+               {!isPass ? <textarea className="textarea is-round" type="text" onChange={e => setYourAnswer(e.target.value)} value={yourAnswer}> </textarea> : ""} 
+                <br></br><button className="button is-info" id="checkingAnswer" onClick={() => cardDefinition()}>Check Your Answer</button>
                 <br></br><Link to={`/cards/${params.id}/edit`} >Edit Card</Link>
                 {isPass && <div><Link onClick={() =>{
                     setYourAnswer("")
