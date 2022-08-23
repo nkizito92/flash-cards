@@ -20,18 +20,18 @@ const CardForm = () => {
         navigation("/cards")
     }
     return (
-        <div>
-            This is CardsForm
+        <div className="container is-max-desktop">
+            <h1 className="title">Create Card</h1>
             <form >
                 <div>
-                    <input type="text" name="name"
-                        onChange={(e) => setName(e.target.value)} value={name} placeholder="name" />
+                    <input type="text" className="input mb-3" name="name"
+                        onChange={(e) => setName(e.target.value)} value={name} placeholder="Name" />
                 </div>
                 <div>
-                    <textarea type="textArea" name="definition" cols={50} rows={10}
+                    <textarea className="textarea" type="textArea" name="definition"
                         onChange={e => setDefinition(e.target.value)} value={definition} placeholder="definition"></textarea>
                 </div>
-                <button onClick={e => handleSubmit(e)}>Create Card</button>
+                <button className="button is-primary is mt-3" onClick={e => handleSubmit(e)}>Create Card</button>
             </form>
         </div>
     )
