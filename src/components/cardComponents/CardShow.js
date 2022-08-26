@@ -10,17 +10,24 @@ const CardShow = ({cards}) => {
     const [isPass, setIsPass] = useState("")
     const [isFail, setIsFail] = useState("")
     const [lives, setLives] = useState(3)
+    const [hints, setHints] = useState("")
+    const [isHint, setIshint] = useState(false)
+    const [hintsAmount, setHintAmount] = useState(5)
+
     let cardSelectId = `/cards/${nextCardIds[Math.floor(Math.random() * cards.length)]}`
     let getTime = () =>{       
         return new Date(card.updated).toLocaleDateString('en-US', 
         {month: "long", day: "numeric", year: "numeric"})
     }
+   
     const cardDefinition = (definition = card.definition) => {
         // take definition from card and compare it to users own definition
         // click to go to next and back as well
+        setHints("")
         const theAnswer = definition.toLowerCase().replace(/[^\w\s]/g, "").split(" ")
-
-            const results = theAnswer.map(word => yourAnswer.toLowerCase().replace(/[^\w\s]/g, "").split(" ").includes(word))
+            let hintText = document.getElementById("hint")
+            const results = theAnswer.map(word => yourAnswer.toLowerCase().replace(/[^\w\s]/g, "").split(" ").includes(word))  
+                setHints(prev => prev + definition.substring(0, (definition.length / 2)))
             const common = {
                 true: 0,
                 false: 0
@@ -33,10 +40,12 @@ const CardShow = ({cards}) => {
                 }
             }
         // This will display the full definition if user is close or right
-        if (common.true > common.false || common.true > 15)  {
+        if (common.true > common.false || common.true > (theAnswer.length / 2) + 2)  {
             setCardDef(card.definition)
             setIsFail("")
             setIsPass(true)
+            setHints("")
+            hintText.hidden = true
         } else {
             setIsPass(false)
             setIsFail("That is not correct try again")
@@ -53,6 +62,7 @@ const CardShow = ({cards}) => {
                 btn.hidden = false
             }, 4000)
         }
+        if(lives === 2) hintText.hidden=false  
     }
     if (card) {
         return (
@@ -64,17 +74,33 @@ const CardShow = ({cards}) => {
                     {isFail && <h3 className="wrong">{isFail}</h3>}
                     {isPass && <div className="correct">Your answer: {yourAnswer} ✅</div>}
                 </div>
+                {/* Hint section might turn it into a component*/}
+                
+                <div id="hint" hidden={true}>
+                    <button className="button is-success is-light mb-3" onClick={() => {
+                        setIshint(true)
+                        setHintAmount( prev => prev - 1)
+                        if(hintsAmount < 1){ 
+                            setHintAmount(0)
+                            document.getElementById('hint').hidden = true
+                        }
+                    }}>Use Hint</button><span>{hintsAmount}</span>
+                    {isHint && <div>{hints}...</div>}
+                </div>
+
               {isPass && <div className="card">
                     <div className="card-content">
                         <div className="content"> {cardDef}</div>
                     </div>
                 </div> }
                {!isPass ? <textarea className="textarea is-round" type="text" onChange={e => setYourAnswer(e.target.value)} value={yourAnswer}> </textarea> : ""} 
-                <br></br><button className="button is-info" id="checkingAnswer" onClick={() => cardDefinition()}>Check Your Answer</button>
+                <button className="button is-info mt-3" id="checkingAnswer" onClick={() => cardDefinition()}>Check Your Answer</button>
                 <br></br><Link to={`/cards/${params.id}/edit`} >Edit Card</Link>
                 {isPass && <div><Link onClick={() =>{
                     setYourAnswer("")
-                    setIsPass(false)}} to={cardSelectId}> Next</Link></div>}
+                    setIsPass(false)
+                    setIshint(false)
+                    }} to={cardSelectId}> Next</Link></div>}
             </div>
         )
     }
