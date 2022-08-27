@@ -7,8 +7,8 @@ const CardEdit = ({cards}) => {
     const params = useParams()
     const card = cards.find(card => card.id === Number(params.id))
     const dispatch = useDispatch()
-    const [name, setName] = useState("")
-    const [definition, setDefinition] = useState("")
+    const [name, setName] = useState(card.name)
+    const [definition, setDefinition] = useState(card.definition)
     function handleSubmit(e) {
         e.preventDefault()
         const clientToUpdate = {
@@ -31,25 +31,25 @@ const CardEdit = ({cards}) => {
     }
     if (card) {
         return (
-            <div>
-                This is Card Edit
+            <div  className="container is-max-desktop">
+                <h1 className="title">This is Card Edit</h1>
                 <form >
                     <div>
-                        <div>Name</div>
-                        <input type="text" name="name"
-                            onChange={(e) => setName(e.target.value)} value={name} placeholder={card.name} />
+                        <div className="subtitle">Name</div>
+                        <input type="text" name="name" className="input"
+                            onChange={(e) => setName(e.target.value)} value={name} placeholder="Edit Name" />
                     </div>
                     <div>
-                        <div>Definition</div>
-                        <textarea type="text" name="definition" rows={10} cols={50}
-                            onChange={e => setDefinition(e.target.value)} value={definition} placeholder={card.definition} ></textarea>
+                        <div className="subtitle mt-3">Definition</div>
+                        <textarea type="text" className="textarea" name="definition" rows={10} cols={50}
+                            onChange={e => setDefinition(e.target.value)} value={definition} placeholder="Edit Definition" ></textarea>
 
                     </div>
-                    <button onClick={e => handleSubmit(e)}>Update Card</button>
+                    <button className="button is-success mt-3" onClick={e => handleSubmit(e)}>Update Card</button>
                 </form>
                 <form>
 
-                    <button onClick={(e) => handleDelete(e)}>Delete Client</button>
+                    <button className="button is-danger mt-3" onClick={(e) => handleDelete(e)}>Delete Client</button>
                 </form>
                 <Link to={`/cards/${params.id}`}>Back</Link>
             </div>
