@@ -10,9 +10,9 @@ const CardShow = ({cards}) => {
     const [isPass, setIsPass] = useState("")
     const [isFail, setIsFail] = useState("")
     const [lives, setLives] = useState(3)
-    const [hints, setHints] = useState("")
+    const [hints, setHints] = useState(card.definition.substring(0, (card.definition.length / 2) + 2))
     const [isHint, setIshint] = useState(false)
-    const [hintsAmount, setHintAmount] = useState(5)
+    const [hintsAmount, setHintAmount] = useState(3)
 
     let cardSelectId = `/cards/${nextCardIds[Math.floor(Math.random() * cards.length)]}`
     let getTime = () =>{       
@@ -23,11 +23,9 @@ const CardShow = ({cards}) => {
     const cardDefinition = (definition = card.definition) => {
         // take definition from card and compare it to users own definition
         // click to go to next and back as well
-        setHints("")
         const theAnswer = definition.toLowerCase().replace(/[^\w\s]/g, "").split(" ")
             let hintText = document.getElementById("hint")
             const results = theAnswer.map(word => yourAnswer.toLowerCase().replace(/[^\w\s]/g, "").split(" ").includes(word))  
-                setHints(prev => prev + definition.substring(0, (definition.length / 2)))
             const common = {
                 true: 0,
                 false: 0
@@ -59,11 +57,14 @@ const CardShow = ({cards}) => {
                 nav(cardSelectId)
                 setLives(3)
                 setIsFail("")
+                setYourAnswer("")
+                hintText.hidden = true
                 btn.hidden = false
             }, 4000)
         }
         if(lives === 2) hintText.hidden=false  
     }
+    const nextCardDef = cards.find(card => card.id === Number(cardSelectId))
     if (card) {
         return (
             <div className="container is-max-desktop">
@@ -79,12 +80,12 @@ const CardShow = ({cards}) => {
                 <div id="hint" hidden={true}>
                     <button className="button is-success is-light mb-3" onClick={() => {
                         setIshint(true)
-                        setHintAmount( prev => prev - 1)
-                        if(hintsAmount < 1){ 
+                        setHintAmount( hints => hints - 1)
+                        if(hintsAmount === 0){ 
                             setHintAmount(0)
                             document.getElementById('hint').hidden = true
                         }
-                    }}>Use Hint</button><span>{hintsAmount}</span>
+                    }}>Use Hint: {hintsAmount}</button>
                     {isHint && <div>{hints}...</div>}
                 </div>
 
@@ -93,13 +94,14 @@ const CardShow = ({cards}) => {
                         <div className="content"> {cardDef}</div>
                     </div>
                 </div> }
-               {!isPass ? <textarea className="textarea is-round" type="text" onChange={e => setYourAnswer(e.target.value)} value={yourAnswer}> </textarea> : ""} 
-                <button className="button is-info mt-3" id="checkingAnswer" onClick={() => cardDefinition()}>Check Your Answer</button>
-                <br></br><Link to={`/cards/${params.id}/edit`} >Edit Card</Link>
+               {!isPass ? <textarea placeholder={`Explain what a ${card.name} is.`} className="textarea is-round" type="text" onChange={e => setYourAnswer(e.target.value)} value={yourAnswer}> </textarea> : ""} 
+                <button className="button are-small is-info mt-3" id="checkingAnswer" onClick={() => cardDefinition()}>Check Your Answer</button>
+                <Link className="button is-warning ml-3 mt-3 " to={`/cards/${params.id}/edit`} >Edit Card</Link>
                 {isPass && <div><Link onClick={() =>{
                     setYourAnswer("")
                     setIsPass(false)
                     setIshint(false)
+                    setTimeout(() => setHints(nextCardDef.definition), 600)
                     }} to={cardSelectId}> Next</Link></div>}
             </div>
         )
