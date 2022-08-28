@@ -51,7 +51,7 @@ const CardEdit = ({cards}) => {
 
                     <button className="button is-danger mt-3" onClick={(e) => handleDelete(e)}>Delete Client</button>
                 </form>
-                <Link to={`/cards/${params.id}`}>Back</Link>
+                <Link className="button mt-3" to={`/cards/${params.id}`}>Back</Link>
             </div>
         )
     }
