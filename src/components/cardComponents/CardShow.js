@@ -94,10 +94,10 @@ const CardShow = ({cards}) => {
                         <div className="content"> {cardDef}</div>
                     </div>
                 </div> }
-               {!isPass ? <textarea placeholder={`Explain what a ${card.name} is.`} className="textarea is-round" type="text" onChange={e => setYourAnswer(e.target.value)} value={yourAnswer}> </textarea> : ""} 
+               {!isPass ? <textarea placeholder={`Explain what a ${card.name} is or what it means.`} className="textarea is-round" type="text" onChange={e => setYourAnswer(e.target.value)} value={yourAnswer}> </textarea> : ""} 
                 <button className="button are-small is-info mt-3" id="checkingAnswer" onClick={() => cardDefinition()}>Check Your Answer</button>
                 <Link className="button is-warning ml-3 mt-3 " to={`/cards/${params.id}/edit`} >Edit Card</Link>
-                {isPass && <div><Link onClick={() =>{
+                {isPass && <div><Link className="button is-link are small mt-3" onClick={() =>{
                     setYourAnswer("")
                     setIsPass(false)
                     setIshint(false)
